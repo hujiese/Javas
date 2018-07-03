@@ -1,4 +1,4 @@
-package scut.itcast_04;
+package scut.hujie_04;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

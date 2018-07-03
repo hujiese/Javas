@@ -1,4 +1,4 @@
-package scut.itcast_01;
+package scut.hujie_01;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

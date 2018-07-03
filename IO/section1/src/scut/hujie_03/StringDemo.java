@@ -1,4 +1,4 @@
-package scut.itcast_03;
+package scut.hujie_03;
 
 import java.util.Arrays;
 
