@@ -2,9 +2,9 @@
 File:文件和目录(文件夹)路径名的抽象表示形式
 ### 构造方法 ###
 
- * 		File(String pathname):根据一个路径得到File对象
- * 		File(String parent, String child):根据一个目录和一个子文件/目录得到File对象
- * 		File(File parent, String child):根据一个父File对象和一个子文件/目录得到File对象
+ * 	File(String pathname):根据一个路径得到File对象
+ * 	File(String parent, String child):根据一个目录和一个子文件/目录得到File对象
+ * 	File(File parent, String child):根据一个父File对象和一个子文件/目录得到File对象
 
 
 		public class FileDemo {
@@ -48,13 +48,13 @@ File:文件和目录(文件夹)路径名的抽象表示形式
 		}
 
 ### 删除功能 ###
-*	public boolean delete()
+* public boolean delete()
 
 注意：
 
- * 		如果你创建文件或者文件夹忘了写盘符路径，那么，默认在项目路径下。
- * 		Java中的删除不走回收站。
- * 		要删除一个文件夹，请注意该文件夹内不能包含文件或者文件夹
+ * 	如果你创建文件或者文件夹忘了写盘符路径，那么，默认在项目路径下。
+ * 	Java中的删除不走回收站。
+ * 	要删除一个文件夹，请注意该文件夹内不能包含文件或者文件夹
  
 
 		public class FileDemo {
@@ -82,12 +82,12 @@ File:文件和目录(文件夹)路径名的抽象表示形式
 		}
 
 ### 重命名功能 ###
-*	public boolean renameTo(File dest)
+* public boolean renameTo(File dest)
 
 注意：
 
- * 		如果路径名相同，就是改名。
- * 		如果路径名不同，就是改名并剪切。
+ * 	如果路径名相同，就是改名。
+ * 	如果路径名不同，就是改名并剪切。
 
 
 		public class FileDemo {
@@ -241,10 +241,10 @@ File:文件和目录(文件夹)路径名的抽象表示形式
 
  思路：
 
- * 		封装目录
- * 		获取该目录下所有的文件的File数组
- * 		遍历该File数组，得到每一个File对象
- * 		拼接一个新的名称，然后重命名即可
+ * 	封装目录
+ * 	获取该目录下所有的文件的File数组
+ * 	遍历该File数组，得到每一个File对象
+ * 	拼接一个新的名称，然后重命名即可
  
 
 		public class FileDemo {
