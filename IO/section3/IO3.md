@@ -237,7 +237,7 @@ RandomAccessFile类不属于流，是Object类的子类，但它融合了InputSt
 		}
 
 
-### 五、合并流SequenceInputStreamDemo ###
+### 五、合并流SequenceInputStream ###
 #### （1）合并两个文件：SequenceInputStream(InputStream s1, InputStream s2) ####
 	public class SequenceInputStreamDemo {
 		public static void main(String[] args) throws IOException {
