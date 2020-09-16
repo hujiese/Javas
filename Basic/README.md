@@ -49,9 +49,32 @@ public class MathDemo {
 }
 ```
 
+### 2、equals方法
+
+自动装箱规范，boolean、byte、char <= 127，介于-128 ~ 127之间的short和int会被包装到固定的对象中，所以比较会相等，例如：
+
+```java
+public class EqualsDemo {
+    public static void main(String[] args){
+        Integer a = 127;
+        Integer b = 127;
+        System.out.println(a == b); // true
+
+        Integer a1 = -128;
+        Integer b1 = -128;
+        System.out.println(a1 == b1); // true
+
+        Integer a2 = 128;
+        Integer b2 = 128;
+        System.out.println(a2 == b2); // false
+
+    }
+}
+```
+
 ## 三、Array部分
 
-## 1、数组拷贝
+### 1、数组拷贝
 
 ```java
 import java.util.Arrays;
@@ -64,3 +87,75 @@ public class ArrayDemo {
     }
 }
 ```
+
+## 四、lambda表达式
+
+### 1、常规操作
+
+```java
+public static void test1(){
+    Java8Tester tester = new Java8Tester();
+
+    // 类型声明
+    MathOperation addition = (int a, int b) -> a + b;
+
+    // 不用类型声明
+    MathOperation subtraction = (a, b) -> a - b;
+
+    // 大括号中的返回语句
+    MathOperation multiplication = (int a, int b) -> { return a * b; };
+
+    // 没有大括号及返回语句
+    MathOperation division = (int a, int b) -> a / b;
+
+    System.out.println("10 + 5 = " + tester.operate(10, 5, addition));
+    System.out.println("10 - 5 = " + tester.operate(10, 5, subtraction));
+    System.out.println("10 x 5 = " + tester.operate(10, 5, multiplication));
+    System.out.println("10 / 5 = " + tester.operate(10, 5, division));
+
+    // 不用括号
+    GreetingService greetService1 = message ->
+            System.out.println("Hello " + message);
+
+    // 用括号
+    GreetingService greetService2 = (message) ->
+            System.out.println("Hello " + message);
+
+    greetService1.sayMessage("Runoob");
+    greetService2.sayMessage("Google");
+}
+
+interface MathOperation {
+    int operation(int a, int b);
+}
+
+interface GreetingService {
+    void sayMessage(String message);
+}
+
+private int operate(int a, int b, MathOperation mathOperation){
+    return mathOperation.operation(a, b);
+}
+```
+
+### 2、Runnable方法
+
+```java
+private static void test2() {
+    // 1.1使用匿名内部类
+    new Thread(new Runnable() {
+        @Override
+        public void run() {
+            System.out.println("Hello world !");
+        }
+    }).start();
+
+   // 1.2使用 lambda expression
+    new Thread(() -> {
+        System.out.println("Hello world !");
+    }).start();
+}
+```
+
+## 五、动态代理
+
