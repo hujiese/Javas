@@ -159,3 +159,131 @@ private static void test2() {
 
 ## 五、动态代理
 
+## 六、反射
+
+## 七、并发
+
+### 1、Future
+
+参考 https://www.cnblogs.com/jcjssl/p/9592145.html
+
+并发编程中，我们经常用到非阻塞的模型，在之前的多线程的三种实现中，不管是继承thread类还是实现runnable接口，都无法保证获取到之前的执行结果。通过实现Callback接口，并用Future可以来接收多线程的执行结果。
+
+Future表示一个可能还没有完成的异步任务的结果，针对这个结果可以添加Callback以便在任务执行成功或失败后作出相应的操作。
+
+举个例子：比如去吃早点时，点了包子和凉菜，包子需要等3分钟，凉菜只需1分钟，如果是串行的一个执行，在吃上早点的时候需要等待4分钟，但是因为你在等包子的时候，可以同时准备凉菜，所以在准备凉菜的过程中，可以同时准备包子，这样只需要等待3分钟。那Future这种模式就是后面这种执行模式。
+
+例如：
+
+```java
+import java.util.concurrent.*;
+
+/**
+ * @version 1.01 2012-01-26
+ * @author Cay Horstmann
+ */
+public class FutureTest
+{
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+        long start = System.currentTimeMillis();
+
+        // 等凉菜
+        Callable ca1 = new Callable(){
+
+            @Override
+            public String call() throws Exception {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return "凉菜准备完毕";
+            }
+        };
+        FutureTask<String> ft1 = new FutureTask<String>(ca1);
+        new Thread(ft1).start();
+
+        // 等包子 -- 必须要等待返回的结果，所以要调用join方法
+        Callable ca2 = new Callable(){
+
+            @Override
+            public Object call() throws Exception {
+                try {
+                    Thread.sleep(1000*3);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return "包子准备完毕";
+            }
+        };
+        FutureTask<String> ft2 = new FutureTask<String>(ca2);
+        new Thread(ft2).start();
+        
+        System.out.println(ft2.get());
+        System.out.println(ft1.get());
+        
+        long end = System.currentTimeMillis();
+        System.out.println("准备完毕时间："+(end-start));
+    }
+}
+```
+
+输出结果如下，其中，get（）方法可以当任务结束后返回一个结果，如果调用时，工作还没有结束，则会阻塞线程，直到任务执行完毕：
+
+```shell
+包子准备完毕
+凉菜准备完毕
+准备完毕时间：3004
+```
+
+等待3s之后先后输出”包子准备完毕“和”凉菜准备完毕“。
+
+设想，准备包子和准备凉菜是两个相关的任务，包子上好了才能再上凉菜。如果换成同步方法，包子准备3s，凉菜准备1s，总共4s；如果换成多线程方法，为了实现这样的先后通过流程，也需要4s（不然可能先上了凉菜再上包子）。使用异步的方法，准备包子3s过程中凉菜也准备好了，上完包子马上就可以上凉菜了，只需要3s时间。
+
+## 八、序列化
+
+src/serialable 文件夹下有Manager和Employee两个对象，ObjectStreamTest中将这两个对象序列化到employee.dat中，然后读取该文件，将三个对象反序列化出来：
+
+```java
+class ObjectStreamTest
+{
+   public static void main(String[] args) throws IOException, ClassNotFoundException
+   {
+      Employee harry = new Employee("Harry Hacker", 50000, 1989, 10, 1);
+      Manager carl = new Manager("Carl Cracker", 80000, 1987, 12, 15);
+      carl.setSecretary(harry);
+      Manager tony = new Manager("Tony Tester", 40000, 1990, 3, 15);
+      tony.setSecretary(harry);
+
+      Employee[] staff = new Employee[3];
+
+      staff[0] = carl;
+      staff[1] = harry;
+      staff[2] = tony;
+
+      // save all employee records to the file employee.dat         
+      try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("employee.dat"))) 
+      {
+         out.writeObject(staff);
+      }
+
+      try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("employee.dat")))
+      {
+         // retrieve all records into a new array
+
+         Employee[] newStaff = (Employee[]) in.readObject();
+
+         // raise secretary's salary
+         newStaff[1].raiseSalary(10);
+
+         // print the newly read employee records
+         for (Employee e : newStaff)
+            System.out.println(e);
+      }
+   }
+}
+```
+
+序列化可以用于clone一个对象，而且是深拷贝，可以实现对象的clone方法，将对象序列化到字节流中，然后从该字节流中还原出一个对象，以此达到深拷贝目的。需要注意的是，这个方法虽然很方便，但比显式构建新对象并复制或者克隆数据域的方法会慢很多。
+
+测试代码可见src/serialable/SerialCloneTest.java。
